@@ -149,8 +149,8 @@
             gnOwsContextService.loadContextFromUrl(gnViewerSettings.owsContext,
                 scope.map);
           } else if (storage.getItem(key)) {
-            var c = storage.getItem(key);
-            gnOwsContextService.loadContext(c, scope.map);
+//            var c = storage.getItem(key);
+//            gnOwsContextService.loadContext(c, scope.map);
           } else if (gnViewerSettings.defaultContext) {
             gnOwsContextService.loadContextFromUrl(
                 gnViewerSettings.defaultContext,

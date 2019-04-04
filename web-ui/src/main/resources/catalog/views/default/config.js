@@ -41,9 +41,9 @@
         function(searchSettings, viewerSettings, gnOwsContextService,
                  gnMap, gnNcWms, gnConfig) {
           // Load the context defined in the configuration
-          viewerSettings.defaultContext =
-            viewerSettings.mapConfig.viewerMap ||
-            '../../map/config-viewer.xml';
+          viewerSettings.defaultContext = null;
+//            viewerSettings.mapConfig.viewerMap ||
+//            '../../map/config-viewer.xml';
 
           // Keep one layer in the background
           // while the context is not yet loaded.
@@ -103,27 +103,142 @@
           // Object to store the current Map context
           viewerSettings.storage = 'sessionStorage';
 
+
+
+             /*******************************************************************
+             * new code
+             */
+
+//      var extent = [0.0000, 0.0000, 849024.0785, 4815054.8210];
+//	    var extent = [-18133594, -11102700, 18137294, 10776300];
+//	    var extent = [-4889334.802955, -4889334.802955, 4889334.802955, 4889334.802955];
+//      var extent = [-180.0000, 45.0000, 180.0000, 90.0000];
+      var extent = [-9014250.655095, -9014250.655095, 9014250.655095, 9014250.655095];
+
+
+      var layerResolutions = [
+	  136421171.96428573131561279297, 
+68210585.96428573131561279297,
+34105292.98928571492433547974,
+17052646.49642857164144515991,
+8526323.24642857164144515991,
+4263161.62500000093132257462,
+2131580.81178571470081806183,
+1065790.40607142867520451546,
+532895.20285714289639145136,
+266447.60146428574807941914,
+133223.80075000002398155630];
+
+      proj4.defs(
+          'EPSG:3575',
+          '+proj=laea +lat_0=90 +lon_0=10 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs');
+
+	  ol.proj.get('EPSG:3575').setExtent(extent);
+      ol.proj.get('EPSG:3575').setWorldExtent([0.0000, 0.0000, 849024.0785, 4815054.8210]);
+//      ol.proj.get('EPSG:3575').setWorldExtent([-9014250.655095, -9014250.655095, 9014250.655095, 9014250.655095]);
+	  
+	  
+
+      proj4.defs('urn:ogc:def:crs:EPSG::3575', proj4.defs('EPSG:3575'));
+      proj4.defs('http://www.opengis.net/gml/srs/epsg.xml#3575', proj4.defs('EPSG:3575'));
+
+      var projection = ol.proj.get('EPSG:3575');
+      var projectionExtent = projection.getExtent();
+
+      var size = ol.extent.getWidth(projectionExtent) / 256;
+      var resolutions = new Array(14);
+      var matrixIds = new Array(14);
+      for (var z = 0; z < 14; ++z) {
+        // generate resolutions and matrixIds arrays for this WMTS
+        resolutions[z] = size / Math.pow(2, z);
+//        resolutions[z] = layerResolutions[z] * 0.00028 / projection.getMetersPerUnit();
+        matrixIds[z] = z;
+      }
+
+
+      var tileGrid = new ol.tilegrid.WMTS({
+        tileSize: 256,
+        extent: projectionExtent,
+        resolutions: resolutions,
+        matrixIds: matrixIds
+      });
+//          var mapUrl = 'http://basemap.arctic-sdi.org/mapcache/wmts';
+//	  var mapUrl = 'http://10.1.10.58/geonetwork/proxy?url=http%3A%2F%2Fbasemap.arctic-sdi.org%2Fmapcache%2Fwmts';
+	  var mapUrl = '../../proxy?url=http%3A%2F%2Fbasemap.arctic-sdi.org%2Fmapcache%2Fwmts';
+	  var source =  new ol.source.WMTS({
+          url: mapUrl,
+          layer: 'arctic_cascading',
+		  matrixSet: '3575',
+		  projection: ol.proj.get('EPSG:3575'),
+          format: 'image/png',
+          tileGrid: tileGrid,
+          version: '1.0.0',
+          style: 'default',
+          crossOrigin: 'anonymous'
+        });
+
+      var wmts = new ol.layer.Tile({
+        extent: extent,
+		attribution: 'Arctic-SDI',
+        group: 'Background layers',
+        url:  mapUrl,
+        source: source
+      });
+
+
+      /*******************************************************************
+       * Define maps
+       */
+      var mapsConfig = {
+        resolutions: resolutions,
+        extent: extent,
+        projection: projection,
+        center: [99166,55780],
+        zoom: 2
+      };
+
+      // Add backgrounds to TOC
+      viewerSettings.bgLayers = [ wmts ];
+      viewerSettings.servicesUrl = {};
+
+      var viewerMap = new ol.Map({
+        controls: [],
+		layers: [ wmts ],
+        view: new ol.View(mapsConfig)
+      });
+
+      var searchMap = new ol.Map({
+        controls:[],
+        layers: [ wmts ],
+        view: new ol.View(angular.extend({}, mapsConfig))
+      });
+             /*******************************************************************
+             * end of new code
+             */
+
+
+
           /*******************************************************************
              * Define maps
              */
-          var mapsConfig = {
-            center: [280274.03240585705, 6053178.654789996],
-            zoom: 2
-            //maxResolution: 9783.93962050256
-          };
+//          var mapsConfig = {
+//            center: [280274.03240585705, 6053178.654789996],
+//            zoom: 2
+//            //maxResolution: 9783.93962050256
+//          };
 
-          var viewerMap = new ol.Map({
-            controls: [],
-            view: new ol.View(mapsConfig)
-          });
+//          var viewerMap = new ol.Map({
+//            controls: [],
+//            view: new ol.View(mapsConfig)
+//          });
 
-          var searchMap = new ol.Map({
-            controls:[],
-            layers: [new ol.layer.Tile({
-              source: new ol.source.OSM()
-            })],
-            view: new ol.View(angular.extend({}, mapsConfig))
-          });
+//          var searchMap = new ol.Map({
+//            controls:[],
+//            layers: [new ol.layer.Tile({
+//              source: new ol.source.OSM()
+//            })],
+//            view: new ol.View(angular.extend({}, mapsConfig))
+//          });
 
 
           /** Facets configuration */

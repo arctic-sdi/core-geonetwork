@@ -160,7 +160,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:value-of select="normalize-space(string($tmp))"></xsl:value-of>
+    <xsl:value-of select="substring(normalize-space(string($tmp)),1,3)"></xsl:value-of>
   </xsl:template>
 
 
