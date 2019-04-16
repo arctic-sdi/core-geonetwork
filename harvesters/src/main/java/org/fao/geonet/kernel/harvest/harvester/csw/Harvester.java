@@ -59,7 +59,8 @@ class Harvester implements IHarvester<HarvestResult> {
     //---
     //---------------------------------------------------------------------------
     // FIXME : Currently switch from POST to GET for testing mainly.
-    public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.GET.toString();
+//    public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.GET.toString();
+    public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.POST.toString();
     //--------------------------------------------------------------------------
     //---
     //--- Constructor
