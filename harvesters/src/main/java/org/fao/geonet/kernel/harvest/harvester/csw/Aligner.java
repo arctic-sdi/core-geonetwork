@@ -133,6 +133,11 @@ public class Aligner extends BaseAligner {
         CswOperation oper = server.getOperation(CswServer.GET_RECORD_BY_ID);
 
         // Use the preferred HTTP method and check one exist.
+        if (log.isDebugEnabled()) {
+            log.debug("Harvester.PREFERRED_HTTP_METHOD = " + Harvester.PREFERRED_HTTP_METHOD);
+            log.debug("GET URL = " + oper.getGetUrl());
+            log.debug("POST URL = " + oper.getPostUrl());
+        }
         if (oper.getGetUrl() != null && Harvester.PREFERRED_HTTP_METHOD.equals("GET")) {
             request.setUrl(context, oper.getGetUrl());
             request.setMethod(GET);
@@ -153,9 +158,14 @@ public class Aligner extends BaseAligner {
 
         if (this.params.outputSchema != null && !this.params.outputSchema.isEmpty()) {
             request.setOutputSchema(this.params.outputSchema);
+            if (log.isDebugEnabled()) {
+                log.debug("outpustSchema (provided) = " + this.params.outputSchema);
+            }
         } else if (oper.getPreferredOutputSchema() != null) {
             request.setOutputSchema(oper.getPreferredOutputSchema());
-        }
+            if (log.isDebugEnabled()) {
+            	log.debug("outpustSchema (preferred) = " + oper.getPreferredOutputSchema());
+            }        }
 
         if (oper.getPreferredServerVersion() != null) {
             request.setServerVersion(oper.getPreferredServerVersion());
