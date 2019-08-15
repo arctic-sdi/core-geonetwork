@@ -145,13 +145,16 @@ public class Aligner extends BaseAligner {
             request.setUrl(context, oper.getPostUrl());
             request.setMethod(POST);
         } else {
-            if (oper.getGetUrl() != null) {
-                request.setUrl(context, oper.getGetUrl());
-                request.setMethod(GET);
-            } else if (oper.getPostUrl() != null) {
+        	// Default to POST method (needed for USA CSW services)
+        	if (oper.getPostUrl() != null) {
                 request.setUrl(context, oper.getPostUrl());
                 request.setMethod(POST);
-            } else {
+            }
+            else if (oper.getGetUrl() != null) {
+                request.setUrl(context, oper.getGetUrl());
+                request.setMethod(GET);
+            } 
+            else {
                 throw new OperationAbortedEx("No GET or POST DCP available in this service.");
             }
         }
