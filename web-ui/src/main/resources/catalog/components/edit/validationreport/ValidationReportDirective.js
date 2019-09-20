@@ -32,8 +32,9 @@
   angular.module('gn_validation_report_directive', [
     'gn_utility'
   ])
-      .directive('gnValidationReport', ['gnValidation', 'gnCurrentEdit',
-        function(gnValidation, gnCurrentEdit) {
+      .directive('gnValidationReport', [
+        'gnValidation', 'gnCurrentEdit', '$location',
+        function(gnValidation, gnCurrentEdit, $location) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/validationreport/' +
@@ -85,6 +86,10 @@
                 });
               };
 
+              scope.scrollTo = function(ref) {
+                $location.search('scrollTo', '#gn-el-' + ref.split('_')[1]);
+              };
+
               scope.labelImportanceClass = function(type) {
                 if (type.error === 0) {
                   return 'label-success';
@@ -113,16 +118,6 @@
                   return 'fa-check';
                 } else {
                   return '';
-                }
-              };
-
-              scope.toggleAlwaysOnTop = function() {
-                scope.alwaysOnTop = !scope.alwaysOnTop;
-                var element = angular.element( document.querySelector( '#gn-editor-validation-panel' ) );
-                if(scope.alwaysOnTop) {
-                  element.addClass('gn-fixed-scroll');
-                } else {
-                  element.removeClass('gn-fixed-scroll');
                 }
               };
 

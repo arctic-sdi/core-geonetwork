@@ -116,6 +116,18 @@
 
           var addGeonames = !attrs['disableGeonames'];
           scope.regionTypes = [];
+
+          function setDefault() {
+            var defaultThesaurus = attrs['default'];
+            for (t in scope.regionTypes) {
+              if (scope.regionTypes[t].name === defaultThesaurus) {
+                scope.regionType = scope.regionTypes[t];
+                return;
+              }
+            }
+            scope.regionType = scope.regionTypes[0];
+          }
+
           /**
            * Load list on init to fill the dropdown
            */
@@ -127,7 +139,7 @@
                 id: 'geonames'
               });
             }
-            scope.regionType = scope.regionTypes[0];
+            setDefault();
           });
 
           scope.setRegion = function(regionType) {
@@ -405,8 +417,8 @@
       };
     }]);
 
-  module.directive('gnHumanizeTime', [
-    function() {
+  module.directive('gnHumanizeTime', ['gnGlobalSettings',
+    function(gnGlobalSettings) {
       return {
         restrict: 'A',
         template: '<span title="{{title}}">{{value}}</span>',
@@ -416,6 +428,7 @@
           fromNow: '@'
         },
         link: function linkFn(scope, element, attr) {
+          var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
           scope.$watch('date', function(originalDate) {
             if (originalDate) {
               // Moment will properly parse YYYY, YYYY-MM,
@@ -433,9 +446,9 @@
                 var formattedDate = scope.format ?
                     date.format(scope.format) :
                     date.toString();
-                scope.value = scope.fromNow !== undefined ?
+                scope.value = scope.fromNow !== undefined && useFromNowSetting ?
                     fromNow : formattedDate;
-                scope.title = scope.fromNow !== undefined ?
+                scope.title = scope.fromNow !== undefined && useFromNowSetting ?
                     formattedDate : fromNow;
               }
             }
@@ -1218,8 +1231,8 @@
    * to the parent element (required to highlight
    * element in navbar)
    */
-  module.directive('gnActiveTbItem', ['$location', 'gnLangs',
-    function($location, gnLangs) {
+  module.directive('gnActiveTbItem', ['$location', 'gnLangs', 'gnConfig',
+    function($location, gnLangs, gnConfig) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -1228,6 +1241,7 @@
 
           // Replace lang in link
           link = link.replace('{{lang}}', gnLangs.getCurrent());
+          link = link.replace('{{node}}', gnConfig.env.node);
 
           // Insert debug mode between service and route
           if (link.indexOf('#') !== -1) {
@@ -1283,10 +1297,11 @@
         }
       };
     }]);
-  module.filter('signInLink', ['$location', 'gnLangs',
-    function($location, gnLangs) {
+  module.filter('signInLink', ['$location', 'gnLangs', 'gnConfig',
+    function($location, gnLangs, gnConfig) {
       return function(href) {
-        href = href.replace('{{lang}}', gnLangs.getCurrent()) +
+        href = href.replace('{{lang}}', gnLangs.getCurrent())
+                   .replace('{{node}}', gnConfig.env.node) +
             '?redirect=' + encodeURIComponent(window.location.href);
         return href;
       }}
@@ -1358,7 +1373,20 @@
         var modalElt;
 
         element.bind('click', function() {
-          var img = scope.$eval(attr['gnImgModal']);
+          var imgOrMd = scope.$eval(attr['gnImgModal']);
+          var img = undefined;
+          if(imgOrMd.getThumbnails) {
+            var imgs = imgOrMd.getThumbnails();
+            var url = $(element).attr('src');
+            for (var i = 0; i < imgs.list.length; i++) {
+              if (imgs.list[i].url === url) {
+                img = imgs.list[i];
+                break;
+              }
+            }
+          } else {
+            img = imgOrMd;
+          }
 
           // Toggle the modal if already displayed
           if (modalElt) {
@@ -1507,4 +1535,28 @@
       };
     }
   ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnStringToNumber
+   *
+   * @description
+   * Converts a string with a number value to a number.
+   * To be used for example in input type=number fields
+   * when the model value is stored in a string field.
+   *
+   */
+  module.directive('gnStringToNumber', function() {
+    return {
+      require: 'ngModel',
+      link: function (scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function (value) {
+          return '' + value;
+        });
+        ngModel.$formatters.push(function (value) {
+          return parseFloat(value);
+        });
+      }
+    };
+  });
 })();

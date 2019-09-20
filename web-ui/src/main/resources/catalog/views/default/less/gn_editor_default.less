@@ -3,6 +3,11 @@
 @import "gn_view.less";
 
 
+.gn-results-editor {
+  .gn-status {
+    font-weight: 500;
+  }
+}
 
 [ng-app="gn_editor"] {
   .gn-top-bar {
@@ -40,16 +45,39 @@
           left: 0;
         }
       }
+      // highlight the active view
+      .gn-view-menu-button {
+        .dropdown-menu {
+          li {
+            &.disabled {
+              background-color: @dropdown-link-hover-bg;
+              a {
+                color: @gray-base;
+                font-weight: bold;
+              }
+            }
+          }
+        } 
+      }
     }
   }
-
+  .gn-sub-bar {
+    .gn-form-any {
+      @media (max-width: @screen-xs-max) {
+        margin-bottom: 10px;
+      }
+    }
+  }
   .gn-editor-board {
     .gn-top-search {
       padding-top: 0;
       padding-bottom: 0;
     }
   }
-
+  .gn-search-facet {
+    padding-top: 55px;
+    padding-bottom: 15px;
+  }
   form.gn-editor {
     // tabs above editor
     .nav {
@@ -200,6 +228,14 @@
     .gn-date-picker > input[type=date], .gn-date-picker > input[type=time] {
       width: 50%;
     }
+    .gn-date-picker.gn-time-with-ind-position {
+      input[type=month], input[type=number] {
+        width: 80%;
+      }
+      &> input[type=date], &> input[type=time] {
+        width: 40%;
+      }
+    }
     // default switch
     [data-ng-switch-default] {
       .col-xs-8, .col-xs-4 {
@@ -294,11 +330,32 @@
     }
     // field in field
     .gn-field {
+      label {
+        font-size: 12px;
+      }
       .gn-field {
         padding-top: 0;
         padding-bottom: 0;
       }
     }
+    .gn-control {
+      padding-left: 0;
+      .field-tooltip, [data-gn-field-highlight-remove] {
+        padding: 6px;
+      }
+    }
+    .gn-multi-field {
+      label.gn-required:after, .gn-required > label:after, label.gn-mandatory:after, .gn-mandatory > label:after {
+        margin-top: -7px;
+      }
+      .col-sm-11 {
+        padding-left: 0;
+      }
+      .col-sm-1 {
+        padding-right: 0;
+      }
+    }
+      
   }
   // map
   .gn-drawmap-panel {
@@ -318,7 +375,7 @@
     .coord {
       position: absolute;
       width: 200px;
-      z-index: 100;
+      z-index: 20;
     }
     .coord-north {
       top: -0.25em;
@@ -378,16 +435,36 @@
 // Class to put label above fields
 form.gn-editor.gn-label-above-input {
   // override default bootstrap widths for the editor
+  // Increase label width to full width
   .col-sm-2 {
     width: 100%;
     text-align: left;
   }
+  // But do not for section in a well (eg. remove action)
+  // which are in one line label/control mode
+  .well {
+    .col-sm-2 {
+      width: 16.666%;
+    }
+    .col-sm-6 {
+      width: 50%;
+    }
+  }
+  // Form field on a second row
   .col-sm-9 {
     width: 90%;
     .col-sm-12 {
       padding-left: 0;
       padding-right: 0;
     }
+  }
+  // Date field
+  .col-sm-6 {
+    width: 65%;
+  }
+  // Cancel offset used in action
+  .col-xs-offset-2 {
+    margin-left: 0px;
   }
   div.gn-extra-field > label {
     display: none;
