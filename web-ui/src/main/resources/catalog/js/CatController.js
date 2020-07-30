@@ -225,17 +225,21 @@ goog.require('gn_alert');
             'wms': [],
             'wmts': []
           },
-          'projection': 'EPSG:3857',
+          'projection': 'EPSG:3575',
           'projectionList': [{
-            'code': 'urn:ogc:def:crs:EPSG:6.6:4326',
-            'label': 'WGS84 (EPSG:4326)'
+              'code': 'urn:ogc:def:crs:EPSG:6.6:4326',
+              'label': 'WGS84 (EPSG:4326)'
+            },{
+            'code': 'urn:ogc:def:crs:EPSG:6.6:3575',
+            'label': 'Arctic LAEA Europe (EPSG:3575)'
           }, {
-            'code': 'EPSG:3857',
-            'label': 'Google mercator (EPSG:3857)'
+            'code': 'EPSG:3575',
+            'label': 'Arctic LAEA Europe (EPSG:3575)'
           }],
           'switcherProjectionList': [{
-            'code': 'EPSG:3857',
-            'label': 'Google mercator (EPSG:3857)'
+            'code': 'EPSG:3575',
+            'label': 'Arctic LAEA Europe (EPSG:3575)',
+            'def':'+proj=laea +lat_0=90 +lon_0=10 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs'
           }],
           'disabledTools': {
             'processes': false,

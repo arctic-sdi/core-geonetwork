@@ -96,6 +96,11 @@
 
           };
 
+          proj4.defs('EPSG:3575','+proj=laea +lat_0=90 +lon_0=10 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs');
+          proj4.defs('urn:ogc:def:crs:EPSG:6.3:3575', proj4.defs('EPSG:3575'));
+          proj4.defs('http://www.opengis.net/gml/srs/epsg.xml#3575', proj4.defs('EPSG:3575'));
+          ol.proj.proj4.register(proj4);
+
           gnMapsManager.initProjections(viewerSettings.mapConfig.switcherProjectionList);
           var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
           var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);

@@ -588,7 +588,7 @@
         var xmlString = (new XMLSerializer()).serializeToString(xml);
         var key = 'owsContext_' +
             window.location.host + window.location.pathname;
-        storage.setItem(key, xmlString);
+        //storage.setItem(key, xmlString);
       };
 
       /**

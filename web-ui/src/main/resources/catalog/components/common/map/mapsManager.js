@@ -157,7 +157,7 @@
             view: new ol.View({
               center: [0, 0],
               projection: gnMap.getMapConfig().projection,
-              zoom: 2
+              zoom: 4
             }),
             // show zoom control in editor maps only
             controls: type !== this.EDITOR_MAP ? [new ol.control.Attribution()] : [
