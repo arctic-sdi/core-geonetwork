@@ -230,8 +230,8 @@ goog.require('gn_alert');
               'code': 'urn:ogc:def:crs:EPSG:6.6:4326',
               'label': 'WGS84 (EPSG:4326)'
             },{
-            'code': 'urn:ogc:def:crs:EPSG:6.6:3575',
-            'label': 'Arctic LAEA Europe (EPSG:3575)'
+            'code': 'EPSG:3006',
+            'label': 'SWEREF99 TM (EPSG:3006)'
           }, {
             'code': 'EPSG:3575',
             'label': 'Arctic LAEA Europe (EPSG:3575)'

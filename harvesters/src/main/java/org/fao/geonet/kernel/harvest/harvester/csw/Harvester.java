@@ -69,7 +69,7 @@ import org.jdom.Namespace;
 
 class Harvester implements IHarvester<HarvestResult> {
     // FIXME : Currently switch from POST to GET for testing mainly.
-    public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.GET.toString();
+    public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.POST.toString();
 
     private final static String ATTRIB_SEARCHRESULT_MATCHED = "numberOfRecordsMatched";
 
@@ -655,10 +655,10 @@ class Harvester implements IHarvester<HarvestResult> {
         try {
             log.debug("Searching on : " + params.getName() + " (" + start + ".." + (start + max) + ")");
             Element response = request.execute();
-            if (log.isDebugEnabled()) {
+//            if (log.isDebugEnabled()) {
                 log.debug("Sent request " + request.getSentData());
                 log.debug("Search results:\n" + Xml.getString(response));
-            }
+//            }
 
             return response;
         } catch (Exception e) {

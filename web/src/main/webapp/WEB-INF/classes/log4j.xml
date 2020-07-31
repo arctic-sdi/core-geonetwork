@@ -85,7 +85,7 @@
     <level value="ERROR"/>
   </logger>
   <logger name="geonetwork.harvester" additivity="false">
-    <level value="INFO"/>
+    <level value="DEBUG"/>
     <appender-ref ref="consoleAppender"/>
     <appender-ref ref="fileAppender"/>
   </logger>
