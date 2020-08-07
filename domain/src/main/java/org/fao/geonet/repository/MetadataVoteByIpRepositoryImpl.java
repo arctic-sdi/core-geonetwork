@@ -59,6 +59,18 @@ public class MetadataVoteByIpRepositoryImpl implements MetadataVoteByIpRepositor
     }
 
     @Override
+    public int sumVote(int metadataId) {
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        CriteriaQuery<Integer> cbQuery = cb.createQuery(Integer.class);
+        Root<MetadataVoteByIp> root = cbQuery.from(MetadataVoteByIp.class);
+
+        Expression<Integer> sum = cb.sum(root.get(MetadataVoteByIp_.vote));
+        cbQuery.select(sum);
+        cbQuery.where(cb.equal(root.get(MetadataVoteByIp_.id).get(MetadataVoteByIpId_.metadataId), metadataId));
+        return _entityManager.createQuery(cbQuery).getSingleResult().intValue();
+    }
+
+    @Override
     @Transactional
     public int deleteAllById_MetadataId(final int metadataId) {
         String entityType = MetadataVoteByIp.class.getSimpleName();

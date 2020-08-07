@@ -41,6 +41,15 @@ public interface MetadataVoteByIpRepositoryCustom {
     int averageVote(int metadataId);
 
     /**
+     * Calculate the sum of all the votes for the given metadata.
+     * </p>
+     *
+     * @param metadataId the metadata id.
+     * @return the sum of all the votes.
+     */
+    int sumVote(int metadataId);
+
+    /**
      * Delete all the entities that are related to the indicated metadata.
      *
      * @param metadataId the id of the metadata.
