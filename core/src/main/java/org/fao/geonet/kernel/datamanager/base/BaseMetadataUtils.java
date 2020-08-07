@@ -40,17 +40,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.domain.MetadataHarvestInfo;
-import org.fao.geonet.domain.MetadataRatingByIp;
-import org.fao.geonet.domain.MetadataRatingByIpId;
-import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
@@ -64,10 +54,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
-import org.fao.geonet.repository.MetadataRatingByIpRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SimpleMetadata;
-import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -104,6 +91,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Autowired
     protected MetadataRatingByIpRepository ratingByIpRepository;
     @Autowired
+    protected MetadataVoteByIpRepository voteByIpRepository;    @Autowired
     @Lazy
     protected SettingManager settingManager;
 
@@ -540,6 +528,40 @@ public class BaseMetadataUtils implements IMetadataUtils {
         indexingList.add(metadataId);
 
         return rating;
+    }
+
+    /**
+     * Vote on a metadata.
+     *
+     * @param ipAddress ipAddress IP address of the submitting client
+     * @param vote    range should be -1 or +1
+     * @throws Exception hmm
+     */
+    @Override
+    public int voteMetadata(final int metadataId, final String ipAddress, final int vote) throws Exception {
+        // Save vote for this IP
+        MetadataVoteByIp voteEntity = new MetadataVoteByIp();
+        voteEntity.setVote(vote);
+        voteEntity.setId(new MetadataVoteByIpId(metadataId, ipAddress));
+
+        voteByIpRepository.save(voteEntity);
+
+        // calculate new vote
+        final int newVote = voteByIpRepository.averageVote(metadataId);
+
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            Log.debug(Geonet.DATA_MANAGER, "Setting vote for id:" + metadataId + " --> vote is:" + newVote);
+
+        metadataRepository.update(metadataId, new Updater<Metadata>() {
+            @Override
+            public void apply(Metadata entity) {
+                entity.getDataInfo().setVote(newVote);
+            }
+        });
+        // And register the metadata to be indexed in the near future
+        indexingList.add(metadataId);
+
+        return vote;
     }
 
     /**

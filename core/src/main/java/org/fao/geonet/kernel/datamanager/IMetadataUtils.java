@@ -249,6 +249,15 @@ public interface IMetadataUtils {
     int rateMetadata(int metadataId, String ipAddress, int rating) throws Exception;
 
     /**
+     * Vote on a metadata.
+     *
+     * @param ipAddress ipAddress IP address of the submitting client
+     * @param vote range should be -1 or +1
+     * @throws Exception hmm
+     */
+    int voteMetadata(int metadataId, String ipAddress, int vote) throws Exception;
+
+    /**
      * Retrieves a metadata (in xml) given its id with no geonet:info.
      */
     Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception;
@@ -388,7 +397,7 @@ public interface IMetadataUtils {
      * Find the record with the UUID uuid
      *
      * @param firstMetadataId
-     * 
+     *
      * @param uuid
      * @return
      */
@@ -397,7 +406,7 @@ public interface IMetadataUtils {
 
     /**
      * Find all records with the UUID uuid
-     * 
+     *
      * @param uuid
      * @return
      */
@@ -439,7 +448,7 @@ public interface IMetadataUtils {
 
     /**
      * Find all the metadata with the identifiers
-     * 
+     *
      * @see org.springframework.data.repository.CrudRepository#findAll(java.lang.Iterable)
      * @param spec
      * @param order

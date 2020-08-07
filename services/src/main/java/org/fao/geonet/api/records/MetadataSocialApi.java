@@ -163,6 +163,63 @@ public class MetadataSocialApi {
         return rating;
     }
 
+    @ApiOperation(
+        value = "Vote on a record",
+        notes = "User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and the " +
+            "system setting localrating/enable is false (the default), the user's rating is shared between " +
+            "GN nodes in this harvesting network. If the metadata was not harvested or if " +
+            "localrating/enable is true then 'local rating' is applied, counting only rating from users of " +
+            "this node.<br/>" +
+            "When a remote rating is applied, the local rating is not updated. It will be updated on the next " +
+            "harvest run (FIXME ?).",
+        nickname = "rate")
+    @RequestMapping(
+        value = "/{metadataUuid}/vote",
+        method = RequestMethod.PUT
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "New rating value."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
+    public
+    @ResponseBody
+    Integer voteRecord(
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(
+            value = "Vote",
+            required = true
+        )
+        @RequestBody(
+            required = true
+        )
+            Integer vote,
+        HttpServletRequest request
+    )
+        throws Exception {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        String ip = context.getIpAddress();
+        if (ip == null) {
+            ip = "???.???.???.???";
+        }
+
+        if (vote < -1 || vote > 1) {
+            throw new BadParameterEx(String.format(
+                "Parameter rating MUST be between 1 and 5. Value %s is invalid."), vote);
+        }
+
+        DataManager dataManager = appContext.getBean(DataManager.class);
+        vote = dataManager.voteMetadata(metadata.getId(), ip, vote);
+        return vote;
+    }
+
     /**
      * TODO GN-API: Needs update on new API
      */

@@ -52,6 +52,7 @@ public class MetadataDataInfo implements Serializable {
     private String _extra;
     private Integer _displayOrder = 0;
     private int _rating = 0;
+    private int _vote = 0;
     private int _popularity = 0;
 
     /**
@@ -252,6 +253,27 @@ public class MetadataDataInfo implements Serializable {
      */
     public MetadataDataInfo setRating(int rating) {
         this._rating = rating;
+        return this;
+    }
+
+    /**
+     * Get the current vote of the metadata.
+     *
+     * @return the vote of the metadata.
+     */
+    @Column(nullable = false)
+    public int getVote() {
+        return _vote;
+    }
+
+    /**
+     * Set the current vote of the metadata.
+     *
+     * @param vote set the metadata rating.
+     * @return this data info object
+     */
+    public MetadataDataInfo setVote(int vote) {
+        this._vote = vote;
         return this;
     }
 
