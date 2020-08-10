@@ -31,7 +31,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
@@ -66,7 +65,6 @@ public class Vote extends NotInReadOnlyModeService {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
-        HarvestManager hm = gc.getBean(HarvestManager.class);
 
         String id = Utils.getIdentifierFromParameters(params, context);
 

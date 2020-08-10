@@ -151,6 +151,43 @@
     }]
   );
 
+  module.directive('gnMetadataVote', [
+    '$http', 'gnConfig',
+    function($http, gnConfig) {
+      return {
+        templateUrl: '../../catalog/components/search/mdview/partials/' +
+          'vote.html',
+        restrict: 'A',
+        scope: {
+          md: '=gnMetadataVote',
+          readonly: '@readonly'
+        },
+
+        link: function(scope, element, attrs, controller) {
+          scope.isRatingEnabled = false;
+
+          var statusSystemRating =
+            gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+          if (statusSystemRating == 'basic') {
+            scope.isRatingEnabled = true;
+          }
+
+          scope.$watch('md', function() {
+            scope.vote = scope.md ? scope.md.voting : 0;
+          });
+
+
+          scope.voteForRecord = function(vote) {
+            return $http.put('../api/records/' + scope.md['geonet:info'].uuid +
+              '/vote', vote).success(function(data) {
+              scope.vote = data;
+            });
+          };
+        }
+      };
+    }]
+  );
+
   /**
    * Directive to provide 3 visualization modes for metadata contacts
    * in metadata detail page:

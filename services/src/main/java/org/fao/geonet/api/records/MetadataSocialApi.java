@@ -172,7 +172,7 @@ public class MetadataSocialApi {
             "this node.<br/>" +
             "When a remote rating is applied, the local rating is not updated. It will be updated on the next " +
             "harvest run (FIXME ?).",
-        nickname = "rate")
+        nickname = "vote")
     @RequestMapping(
         value = "/{metadataUuid}/vote",
         method = RequestMethod.PUT
@@ -212,7 +212,7 @@ public class MetadataSocialApi {
 
         if (vote < -1 || vote > 1) {
             throw new BadParameterEx(String.format(
-                "Parameter rating MUST be between 1 and 5. Value %s is invalid."), vote);
+                "Parameter rating MUST be between -1 and +1. Value %s is invalid."), vote);
         }
 
         DataManager dataManager = appContext.getBean(DataManager.class);
