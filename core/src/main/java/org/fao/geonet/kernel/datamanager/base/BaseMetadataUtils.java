@@ -91,7 +91,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Autowired
     protected MetadataRatingByIpRepository ratingByIpRepository;
     @Autowired
-    protected MetadataVoteByIpRepository voteByIpRepository;    @Autowired
+    protected MetadataVoteByIpRepository voteByIpRepository;
+    @Autowired
     @Lazy
     protected SettingManager settingManager;
 
@@ -545,21 +546,6 @@ public class BaseMetadataUtils implements IMetadataUtils {
         voteEntity.setId(new MetadataVoteByIpId(metadataId, ipAddress));
 
         voteByIpRepository.save(voteEntity);
-
-        // calculate new vote
-        final int newVote = voteByIpRepository.averageVote(metadataId);
-
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Setting vote for id:" + metadataId + " --> vote is:" + newVote);
-
-        metadataRepository.update(metadataId, new Updater<Metadata>() {
-            @Override
-            public void apply(Metadata entity) {
-                entity.getDataInfo().setVote(newVote);
-            }
-        });
-        // And register the metadata to be indexed in the near future
-        indexingList.add(metadataId);
 
         return vote;
     }

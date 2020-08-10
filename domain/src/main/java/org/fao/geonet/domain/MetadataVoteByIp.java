@@ -23,16 +23,14 @@
 
 package org.fao.geonet.domain;
 
-import org.fao.geonet.entitylistener.MetadataRatingByIpEntityListenerManager;
 import org.fao.geonet.entitylistener.MetadataVoteByIpEntityListenerManager;
 
 import javax.persistence.*;
 
 /**
- * An entity that tracks which users have rated a metadata. It currently tracks by Ip address so
- * that each IP address can only rate a given metadata once.
+ * An entity that tracks which users have voted on metadata. It currently tracks by Ip address so
+ * that each IP address can only vote a given metadata once.
  *
- * @author Jesse
  */
 @Entity
 @Access(AccessType.PROPERTY)
@@ -74,7 +72,7 @@ public class MetadataVoteByIp extends GeonetEntity {
     /**
      * Set the vote for this IP address.
      *
-     * @param set the vote for this IP address.
+     * @param vote Set the vote for this IP address.
      */
     public void setVote(int vote) {
         this._vote = vote;

@@ -99,19 +99,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataFileUploadRepository;
-import org.fao.geonet.repository.MetadataRatingByIpRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.PathSpec;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.Updater;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.UserSavedSelectionRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -177,6 +165,8 @@ public class BaseMetadataManager implements IMetadataManager {
     private EditLib editLib;
     @Autowired
     private MetadataRatingByIpRepository metadataRatingByIpRepository;
+    @Autowired
+    private MetadataVoteByIpRepository metadataVoteByIpRepository;
     @Autowired
     private MetadataFileUploadRepository metadataFileUploadRepository;
     @Autowired(required = false)
@@ -345,6 +335,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
         int intId = Integer.parseInt(id);
         metadataRatingByIpRepository.deleteAllById_MetadataId(intId);
+        metadataVoteByIpRepository.deleteAllById_MetadataId(intId);
         metadataValidationRepository.deleteAllById_MetadataId(intId);
         metadataStatusRepository.deleteAllById_MetadataId(intId);
         userSavedSelectionRepository.deleteAllByUuid(metadataUtils.getMetadataUuid(id));
