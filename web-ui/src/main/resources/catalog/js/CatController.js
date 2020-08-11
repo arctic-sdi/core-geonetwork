@@ -279,7 +279,7 @@ goog.require('gn_alert');
         },
         'recordview': {
           'enabled': true,
-          'isSocialbarEnabled': true
+          'isSocialbarEnabled': false
         },
         'editor': {
           'enabled': true,
@@ -316,7 +316,7 @@ goog.require('gn_alert');
       requireProxy: [],
       gnCfg: angular.copy(defaultConfig),
       gnUrl: '',
-      docUrl: 'https://geonetwork-opensource.org/manuals/3.8.x/',
+      docUrl: 'https://geonetwork-opensource.org/manuals/3.10.x/en/',
       //docUrl: '../../doc/',
       modelOptions: {
         updateOn: 'default blur',
