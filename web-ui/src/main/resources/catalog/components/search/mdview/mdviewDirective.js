@@ -164,18 +164,16 @@
         },
 
         link: function(scope, element, attrs, controller) {
-          scope.isRatingEnabled = false;
-
-          var statusSystemRating =
-            gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
-          if (statusSystemRating == 'basic') {
-            scope.isRatingEnabled = true;
-          }
+//          scope.isRatingEnabled = false;
+//          var statusSystemRating =
+//            gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+//          if (statusSystemRating == 'basic') {
+//            scope.isRatingEnabled = true;
+//          }
 
           scope.$watch('md', function() {
             scope.vote = scope.md ? scope.md.voting : 0;
           });
-
 
           scope.voteForRecord = function(vote) {
             return $http.put('../api/records/' + scope.md['geonet:info'].uuid +
