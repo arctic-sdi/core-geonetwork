@@ -93,6 +93,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Autowired
     protected MetadataVoteByIpRepository voteByIpRepository;
     @Autowired
+    protected MetadataVoteBySessionRepository voteBySessionRepository;
+    @Autowired
     @Lazy
     protected SettingManager settingManager;
 
@@ -546,6 +548,33 @@ public class BaseMetadataUtils implements IMetadataUtils {
         voteEntity.setId(new MetadataVoteByIpId(metadataId, ipAddress));
 
         voteByIpRepository.save(voteEntity);
+
+        return vote;
+    }
+
+    /**
+     * Vote on a metadata.
+     *
+     * @param sessionId session Id of the submitting client
+     * @param userName user name of the submitting client
+     * @param comment comment provided by the submitting client
+     * @param ipAddress ipAddress IP address of the submitting client
+     * @param timestamp date and time of the submmitting client
+     * @param vote range should be -1 to +1
+     * @throws Exception hmm
+     */
+    @Override
+    public int voteMetadata(int metadataId, String sessionId, String userName, String comment, String ipAddress, String timestamp, int vote) throws Exception {
+        // Save vote for this IP
+        MetadataVoteBySession voteEntity = new MetadataVoteBySession();
+        voteEntity.setVote(vote);
+        voteEntity.setUserName(userName);
+        voteEntity.setComment(comment);
+        voteEntity.setIpAddress(ipAddress);
+        voteEntity.setTimestamp(timestamp);
+        voteEntity.setId(new MetadataVoteBySessionId(metadataId, sessionId));
+
+        voteBySessionRepository.save(voteEntity);
 
         return vote;
     }

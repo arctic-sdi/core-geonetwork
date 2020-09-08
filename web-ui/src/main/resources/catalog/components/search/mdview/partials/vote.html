@@ -1,8 +1,16 @@
-<div class="btn-group" >
-  <button class="btn btn-default" data-ng-model="vote" ng-click="voteForRecord(1)">
-    <span class="fa fa-thumbs-up text-success"></span>
+<div>
+  Your Comment about this metadata
+  <p/>
+  <input id="txtvotecomment" data-ng-model="votecomment" ng-init="votecomment = null" title="Your comment about this metadata" type="text" placeholder="Why do you think this metadata is ok or not?" size="50" maxlength="200">
+  <div class="btn-group" data-ng-show="!hideVoteButtons" >
+    <button class="btn btn-default" title="Good" data-ng-model="vote" ng-click="voteForRecord(1)">
+      <span class="fa fa-thumbs-up text-success"></span>
+    </button>
+    <button class="btn btn-default" title="Bad" data-ng-model="vote" ng-click="voteForRecord(-1)">
+      <span class="fa fa-thumbs-down text-danger"></span>
+    </button>
+    <button class="btn btn-default" title="Maybe" data-ng-model="vote" ng-click="voteForRecord(0)">
+      <span class="fa fa-thumbs-up text-warning"></span>
   </button>
-  <button class="btn btn-default" data-ng-model="vote" ng-click="voteForRecord(-1)">
-    <span class="fa fa-thumbs-down text-danger"></span>
-  </button>
+  </div>
 </div>

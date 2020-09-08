@@ -357,6 +357,11 @@ public class DataManager {
     }
 
     @Deprecated
+    public int voteMetadata(final int metadataId, final String sessionId, final String userName, final String comment, final String ipAddress, final String timestamp, final int vote) throws Exception {
+        return metadataUtils.voteMetadata(metadataId, sessionId, userName, comment, ipAddress, timestamp, vote);
+    }
+
+    @Deprecated
     public String createMetadata(ServiceContext context, String templateId, String groupOwner, String source, int owner, String parentUuid,
             String isTemplate, boolean fullRightsForGroup) throws Exception {
         return metadataManager.createMetadata(context, templateId, groupOwner, source, owner, parentUuid, isTemplate, fullRightsForGroup);

@@ -37,6 +37,7 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 
 /**
  * User voting of metadata. This counts only votes from users of
@@ -69,7 +70,11 @@ public class Vote extends NotInReadOnlyModeService {
         String id = Utils.getIdentifierFromParameters(params, context);
 
         String vot = Util.getParam(params, Params.VOTE);
+        String comment = Util.getParam(params, Params.VOTECOMMENT);
         String ip = context.getIpAddress();
+        String username = context.getUserSession().getUsername();
+        String sessionid = context.getUserSession().getsHttpSession().getId();
+        String timestamp = LocalDateTime.now().toString();
 
         int iLocalId = Integer.parseInt(id);
         if (!dm.existsMetadata(iLocalId))

@@ -164,21 +164,26 @@
         },
 
         link: function(scope, element, attrs, controller) {
-//          scope.isRatingEnabled = false;
-//          var statusSystemRating =
-//            gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
-//          if (statusSystemRating == 'basic') {
-//            scope.isRatingEnabled = true;
-//          }
 
           scope.$watch('md', function() {
-            scope.vote = scope.md ? scope.md.voting : 0;
+            scope.vote = scope.md ? scope.md.vote : null;
+          });
+
+          scope.$watch('votecomment', function (){
+            scope.hideVoteButtons = angular.element('#txtvotecomment').val().length == 0 ? true : false;
           });
 
           scope.voteForRecord = function(vote) {
+            var inputcomment = angular.element('#txtvotecomment').val();
+            var inputdata = {
+              "voteComment" : inputcomment,
+              "vote" : vote
+            }
             return $http.put('../api/records/' + scope.md['geonet:info'].uuid +
-              '/vote', vote).success(function(data) {
-              scope.vote = data;
+              '/vote', JSON.stringify(inputdata)).success(function(data) {
+              //scope.vote = data;
+              // clear voteComment and vote from scope
+              scope.votecomment = "";
             });
           };
         }

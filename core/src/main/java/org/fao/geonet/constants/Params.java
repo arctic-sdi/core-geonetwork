@@ -93,6 +93,7 @@ public final class Params {
     public static final String KIND = "kind";
     public static final String RATING = "rating";
     public static final String VOTE = "vote";
+    public static final String VOTECOMMENT = "votecomment";
     public static final String FILE_TYPE = "file_type";
     public static final String GENERATE_UUID = "generateUUID";
     public static final String OPERATES_ON = "operatesOn";

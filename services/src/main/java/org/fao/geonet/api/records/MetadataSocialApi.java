@@ -29,9 +29,11 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -191,19 +193,35 @@ public class MetadataSocialApi {
         @PathVariable
             String metadataUuid,
         @ApiParam(
-            value = "Vote",
+            value = "VoteParams",
             required = true
         )
         @RequestBody(
-            required = true
+            required=true
         )
-            Integer vote,
+            VotaParams voteParams,
         HttpServletRequest request
     )
         throws Exception {
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
+
+        String voteComment = voteParams.getVoteComment();
+
+        int vote = voteParams.getVote();
+
+        String sessionId = context.getUserSession().getsHttpSession().getId();
+
+        String userName = context.getUserSession().getUsername();
+        if (userName == null || StringUtils.isBlank(userName)) {
+            userName = "unknown";
+        }
+        String timestamp = LocalDateTime.now().toString();
+        if (timestamp == null || StringUtils.isBlank(timestamp)){
+            timestamp = "unknown";
+        }
+
 
         String ip = context.getIpAddress();
         if (ip == null) {
@@ -216,7 +234,7 @@ public class MetadataSocialApi {
         }
 
         DataManager dataManager = appContext.getBean(DataManager.class);
-        vote = dataManager.voteMetadata(metadata.getId(), ip, vote);
+        vote = dataManager.voteMetadata(metadata.getId(), sessionId, userName, voteComment, ip, timestamp, vote);
         return vote;
     }
 

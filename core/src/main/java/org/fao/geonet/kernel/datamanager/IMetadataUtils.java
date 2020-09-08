@@ -258,6 +258,20 @@ public interface IMetadataUtils {
     int voteMetadata(int metadataId, String ipAddress, int vote) throws Exception;
 
     /**
+     * Vote on a metadata.
+     *
+     * @param sessionId session Id of the submitting client
+     * @param userName user name of the submitting client
+     * @param comment comment provided by the submitting client
+     * @param ipAddress ipAddress IP address of the submitting client
+     * @param timestamp date and time of the submitting client
+     * @param vote range should be -1 to +1
+     * @throws Exception hmm
+     */
+    int voteMetadata(int metadataId, String sessionId, String userName, String comment, String ipAddress, String timestamp, int vote) throws Exception;
+
+
+    /**
      * Retrieves a metadata (in xml) given its id with no geonet:info.
      */
     Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception;
